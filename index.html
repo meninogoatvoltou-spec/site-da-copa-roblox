@@ -678,27 +678,7 @@
   </div>
 </section>
 
-<!-- VER CANDIDATURAS -->
-<section class="candidaturas-section" id="ver">
-  <div class="candidaturas-inner">
-    <p class="section-label">Painel</p>
-    <h2 class="section-title" style="font-family:'Bebas Neue',sans-serif;font-size:56px;letter-spacing:2px;margin-bottom:32px;">CANDIDATURAS</h2>
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('jogadores', this)">Jogadores</button>
-      <button class="tab-btn" onclick="switchTab('juizes', this)">Juízes</button>
-      <button class="tab-btn" onclick="switchTab('tecnicos', this)">Técnicos</button>
-    </div>
-    <div id="tab-jogadores" class="tab-content active">
-      <div class="candidatura-list" id="list-jogadores"></div>
-    </div>
-    <div id="tab-juizes" class="tab-content">
-      <div class="candidatura-list" id="list-juizes"></div>
-    </div>
-    <div id="tab-tecnicos" class="tab-content">
-      <div class="candidatura-list" id="list-tecnicos"></div>
-    </div>
-  </div>
-</section>
+
 
 <footer>
   © 2025 Copa Roblox [TCS] S1 · Todos os direitos reservados
@@ -859,16 +839,7 @@
 </div>
 
 <script>
-  // Storage keys
-  const KEYS = { jogador: 'tcs_jogadores', juiz: 'tcs_juizes', tecnico: 'tcs_tecnicos' };
-
-  function getData(type) {
-    try { return JSON.parse(localStorage.getItem(KEYS[type]) || '[]'); } catch { return []; }
-  }
-
-  function saveData(type, arr) {
-    localStorage.setItem(KEYS[type], JSON.stringify(arr));
-  }
+  const WEBHOOK = 'https://discord.com/api/webhooks/1477726162284445726/JH3j_Vpi-3GO7mXxa58vDmBI6xr7ypJ5IWG7cQl1u8QOSL_xwMciWFhzVuxl2P7d-YNs';
 
   function openModal(type) {
     document.getElementById('modal-' + type).classList.add('active');
@@ -880,7 +851,6 @@
     document.body.style.overflow = '';
   }
 
-  // Close on overlay click
   document.querySelectorAll('.modal-overlay').forEach(el => {
     el.addEventListener('click', e => {
       if (e.target === el) {
@@ -895,9 +865,10 @@
     return el ? el.value : '';
   }
 
-  function submitForm(type) {
-    let data = {};
+  async function submitForm(type) {
+    let embed = {};
     let valid = true;
+    const data = new Date().toLocaleDateString('pt-BR');
 
     if (type === 'jogador') {
       const roblox = document.getElementById('j-roblox').value.trim();
@@ -905,21 +876,57 @@
       const posicao = document.getElementById('j-posicao').value;
       const regras = getRadio('j-regras');
       if (!roblox || !discord || !posicao || !regras) { valid = false; }
-      data = { roblox, discord, posicao, regras, data: new Date().toLocaleDateString('pt-BR') };
+      embed = {
+        title: '⚽  Nova Candidatura — JOGADOR',
+        color: 0xffffff,
+        fields: [
+          { name: '🎮 Nick Roblox', value: roblox, inline: true },
+          { name: '💬 Nick Discord', value: discord, inline: true },
+          { name: '📌 Posição', value: posicao, inline: true },
+          { name: '📋 Vai respeitar as regras?', value: regras, inline: true },
+          { name: '📅 Data', value: data, inline: true },
+        ],
+        footer: { text: 'Copa Roblox [TCS] S1' },
+        timestamp: new Date().toISOString()
+      };
     } else if (type === 'juiz') {
       const roblox = document.getElementById('ju-roblox').value.trim();
       const discord = document.getElementById('ju-discord').value.trim();
       const regras = getRadio('ju-regras');
       const zaralhar = getRadio('ju-zaralhar');
       if (!roblox || !discord || !regras || !zaralhar) { valid = false; }
-      data = { roblox, discord, regras, zaralhar, data: new Date().toLocaleDateString('pt-BR') };
+      embed = {
+        title: '🟨  Nova Candidatura — JUIZ',
+        color: 0xf1c40f,
+        fields: [
+          { name: '🎮 Nick Roblox', value: roblox, inline: true },
+          { name: '💬 Nick Discord', value: discord, inline: true },
+          { name: '📋 Sabe as regras do TCS?', value: regras, inline: true },
+          { name: '😈 Vai zaralhar?', value: zaralhar, inline: true },
+          { name: '📅 Data', value: data, inline: true },
+        ],
+        footer: { text: 'Copa Roblox [TCS] S1' },
+        timestamp: new Date().toISOString()
+      };
     } else if (type === 'tecnico') {
       const roblox = document.getElementById('t-roblox').value.trim();
       const discord = document.getElementById('t-discord').value.trim();
       const zaralhar = getRadio('t-zaralhar');
       const exp = getRadio('t-exp');
       if (!roblox || !discord || !zaralhar || !exp) { valid = false; }
-      data = { roblox, discord, zaralhar, exp, data: new Date().toLocaleDateString('pt-BR') };
+      embed = {
+        title: '📋  Nova Candidatura — TÉCNICO',
+        color: 0x3498db,
+        fields: [
+          { name: '🎮 Nick Roblox', value: roblox, inline: true },
+          { name: '💬 Nick Discord', value: discord, inline: true },
+          { name: '😈 Vai zaralhar?', value: zaralhar, inline: true },
+          { name: '🏆 Já foi técnico?', value: exp, inline: true },
+          { name: '📅 Data', value: data, inline: true },
+        ],
+        footer: { text: 'Copa Roblox [TCS] S1' },
+        timestamp: new Date().toISOString()
+      };
     }
 
     if (!valid) {
@@ -927,79 +934,51 @@
       return;
     }
 
-    const arr = getData(type);
-    arr.push(data);
-    saveData(type, arr);
+    // Disable button
+    const btn = document.querySelector(`#form-${type} .form-submit`);
+    btn.textContent = 'ENVIANDO...';
+    btn.disabled = true;
 
-    document.getElementById('form-' + type).style.display = 'none';
-    document.getElementById('success-' + type).classList.add('show');
+    try {
+      const res = await fetch(WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ embeds: [embed] })
+      });
 
-    setTimeout(() => {
-      closeModal(type);
-      document.getElementById('form-' + type).style.display = 'block';
-      document.getElementById('success-' + type).classList.remove('show');
-      // reset
-      if (type === 'jogador') {
-        document.getElementById('j-roblox').value = '';
-        document.getElementById('j-discord').value = '';
-        document.getElementById('j-posicao').value = '';
-        document.querySelectorAll('input[name="j-regras"]').forEach(r => r.checked = false);
-      } else if (type === 'juiz') {
-        document.getElementById('ju-roblox').value = '';
-        document.getElementById('ju-discord').value = '';
-        document.querySelectorAll('input[name="ju-regras"],input[name="ju-zaralhar"]').forEach(r => r.checked = false);
-      } else if (type === 'tecnico') {
-        document.getElementById('t-roblox').value = '';
-        document.getElementById('t-discord').value = '';
-        document.querySelectorAll('input[name="t-zaralhar"],input[name="t-exp"]').forEach(r => r.checked = false);
-      }
-      renderAll();
-    }, 2000);
-  }
+      if (!res.ok) throw new Error('Erro ao enviar');
 
-  function renderList(type) {
-    const listId = { jogador: 'list-jogadores', juiz: 'list-juizes', tecnico: 'list-tecnicos' }[type];
-    const container = document.getElementById(listId);
-    const arr = getData(type);
+      document.getElementById('form-' + type).style.display = 'none';
+      document.getElementById('success-' + type).classList.add('show');
 
-    if (arr.length === 0) {
-      container.innerHTML = `<div class="empty-state"><span class="empty-icon">📭</span><p>Nenhuma candidatura ainda.</p></div>`;
-      return;
+      setTimeout(() => {
+        closeModal(type);
+        document.getElementById('form-' + type).style.display = 'block';
+        document.getElementById('success-' + type).classList.remove('show');
+        btn.textContent = 'ENVIAR CANDIDATURA';
+        btn.disabled = false;
+        // reset fields
+        if (type === 'jogador') {
+          document.getElementById('j-roblox').value = '';
+          document.getElementById('j-discord').value = '';
+          document.getElementById('j-posicao').value = '';
+          document.querySelectorAll('input[name="j-regras"]').forEach(r => r.checked = false);
+        } else if (type === 'juiz') {
+          document.getElementById('ju-roblox').value = '';
+          document.getElementById('ju-discord').value = '';
+          document.querySelectorAll('input[name="ju-regras"],input[name="ju-zaralhar"]').forEach(r => r.checked = false);
+        } else if (type === 'tecnico') {
+          document.getElementById('t-roblox').value = '';
+          document.getElementById('t-discord').value = '';
+          document.querySelectorAll('input[name="t-zaralhar"],input[name="t-exp"]').forEach(r => r.checked = false);
+        }
+      }, 2000);
+
+    } catch (err) {
+      alert('Erro ao enviar candidatura. Verifique sua conexão e tente novamente.');
+      btn.textContent = 'ENVIAR CANDIDATURA';
+      btn.disabled = false;
     }
-
-    container.innerHTML = arr.map((d, i) => {
-      if (type === 'jogador') {
-        return `<div class="candidatura-item">
-          <div class="field"><div class="field-label">Roblox</div>${d.roblox}</div>
-          <div class="field"><div class="field-label">Discord</div>${d.discord}</div>
-          <div class="field"><div class="field-label">Posição</div>${d.posicao}</div>
-          <div class="field"><div class="field-label">Vai respeitar regras?</div>${d.regras}</div>
-          <div class="field"><div class="field-label">Data</div><span class="status-badge">${d.data}</span></div>
-        </div>`;
-      } else if (type === 'juiz') {
-        return `<div class="candidatura-item">
-          <div class="field"><div class="field-label">Roblox</div>${d.roblox}</div>
-          <div class="field"><div class="field-label">Discord</div>${d.discord}</div>
-          <div class="field"><div class="field-label">Sabe as regras?</div>${d.regras}</div>
-          <div class="field"><div class="field-label">Vai zaralhar?</div>${d.zaralhar}</div>
-          <div class="field"><div class="field-label">Data</div><span class="status-badge">${d.data}</span></div>
-        </div>`;
-      } else {
-        return `<div class="candidatura-item">
-          <div class="field"><div class="field-label">Roblox</div>${d.roblox}</div>
-          <div class="field"><div class="field-label">Discord</div>${d.discord}</div>
-          <div class="field"><div class="field-label">Vai zaralhar?</div>${d.zaralhar}</div>
-          <div class="field"><div class="field-label">Já foi técnico?</div>${d.exp}</div>
-          <div class="field"><div class="field-label">Data</div><span class="status-badge">${d.data}</span></div>
-        </div>`;
-      }
-    }).join('');
-  }
-
-  function renderAll() {
-    renderList('jogador');
-    renderList('juiz');
-    renderList('tecnico');
   }
 
   function switchTab(name, btn) {
@@ -1009,15 +988,12 @@
     document.getElementById('tab-' + name).classList.add('active');
   }
 
-  // Smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();
       document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
     });
   });
-
-  renderAll();
 </script>
 </body>
 </html>
