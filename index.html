@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Copa Roblox [TCS] S1</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f5f5;
+    --gray: #1a1a1a;
+    --gray2: #2a2a2a;
+    --gray3: #888;
+    --accent: #ffffff;
+    --border: #2e2e2e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 64px;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--white);
+  }
+
+  .nav-logo span {
+    color: var(--gray3);
+    font-size: 14px;
+    display: block;
+    letter-spacing: 4px;
+    margin-top: -4px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--gray3);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    padding: 80px 40px 40px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 50% at 50% 60%, rgba(255,255,255,0.04) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.02) 39px, rgba(255,255,255,0.02) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.02) 39px, rgba(255,255,255,0.02) 40px);
+  }
+
+  .hero-badge {
+    display: inline-block;
+    border: 1px solid var(--border);
+    padding: 6px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gray3);
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 12vw, 140px);
+    line-height: 0.9;
+    letter-spacing: 4px;
+    animation: fadeUp 0.8s 0.1s ease forwards;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    -webkit-text-stroke: 1px var(--white);
+    color: transparent;
+  }
+
+  .hero-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    letter-spacing: 6px;
+    color: var(--gray3);
+    margin-top: 16px;
+    text-transform: uppercase;
+    animation: fadeUp 0.8s 0.2s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .hero-divider {
+    width: 60px;
+    height: 2px;
+    background: var(--white);
+    margin: 32px auto;
+    animation: fadeUp 0.8s 0.3s ease forwards;
+    opacity: 0;
+  }
+
+  .hero-desc {
+    font-size: 15px;
+    color: var(--gray3);
+    max-width: 420px;
+    line-height: 1.7;
+    animation: fadeUp 0.8s 0.4s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeUp 0.8s 0.5s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .btn {
+    padding: 14px 32px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background: var(--white);
+    color: var(--black);
+  }
+
+  .btn-primary:hover {
+    background: var(--gray3);
+    color: var(--white);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--white);
+    border: 1px solid var(--border);
+  }
+
+  .btn-outline:hover {
+    border-color: var(--white);
+    background: rgba(255,255,255,0.05);
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* CARDS SECTION */
+  .section {
+    padding: 100px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gray3);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 48px;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2px;
+  }
+
+  .card {
+    background: var(--gray);
+    border: 1px solid var(--border);
+    padding: 40px 36px;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--white);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .card:hover::before { transform: scaleX(1); }
+
+  .card:hover {
+    background: var(--gray2);
+    transform: translateY(-4px);
+  }
+
+  .card-icon {
+    font-size: 40px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--gray3);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .card-link {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-link::after {
+    content: '→';
+    transition: transform 0.2s;
+  }
+
+  .card:hover .card-link::after { transform: translateX(6px); }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--gray);
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 540px;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(30px);
+    transition: transform 0.3s;
+    position: relative;
+  }
+
+  .modal-overlay.active .modal {
+    transform: translateY(0);
+  }
+
+  .modal-header {
+    padding: 32px 36px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .modal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 2px;
+  }
+
+  .modal-close {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--gray3);
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    margin-left: 16px;
+  }
+
+  .modal-close:hover { border-color: var(--white); color: var(--white); }
+
+  .modal-body {
+    padding: 32px 36px;
+  }
+
+  .form-group {
+    margin-bottom: 24px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray3);
+    margin-bottom: 8px;
+  }
+
+  .form-input, .form-select {
+    width: 100%;
+    background: var(--black);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 12px 16px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+
+  .form-input:focus, .form-select:focus {
+    border-color: var(--white);
+  }
+
+  .form-input::placeholder { color: #444; }
+
+  .form-select option {
+    background: var(--gray);
+  }
+
+  .form-radio-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .form-radio {
+    display: none;
+  }
+
+  .form-radio-label {
+    padding: 8px 18px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--gray3);
+  }
+
+  .form-radio:checked + .form-radio-label {
+    background: var(--white);
+    color: var(--black);
+    border-color: var(--white);
+  }
+
+  .form-radio-label:hover {
+    border-color: var(--white);
+    color: var(--white);
+  }
+
+  .form-submit {
+    width: 100%;
+    padding: 16px;
+    background: var(--white);
+    color: var(--black);
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+
+  .form-submit:hover {
+    background: var(--gray3);
+    color: var(--white);
+  }
+
+  /* SUCCESS */
+  .success-msg {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .success-msg.show { display: block; }
+
+  .success-icon {
+    font-size: 56px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .success-msg h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .success-msg p {
+    color: var(--gray3);
+    font-size: 14px;
+  }
+
+  /* CANDIDATURAS SECTION */
+  .candidaturas-section {
+    padding: 80px 40px;
+    background: var(--gray);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .candidaturas-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 14px 24px;
+    color: var(--gray3);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: -1px;
+  }
+
+  .tab-btn.active {
+    color: var(--white);
+    border-bottom-color: var(--white);
+  }
+
+  .tab-btn:hover { color: var(--white); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .candidatura-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .candidatura-item {
+    background: var(--black);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+  }
+
+  .candidatura-item .field {
+    font-size: 13px;
+  }
+
+  .candidatura-item .field-label {
+    color: var(--gray3);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--gray3);
+  }
+
+  .empty-state .empty-icon { font-size: 48px; margin-bottom: 16px; display: block; }
+  .empty-state p { font-size: 14px; }
+
+  /* STATUS BADGE */
+  .status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border);
+    color: var(--gray3);
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 40px;
+    color: var(--gray3);
+    font-size: 12px;
+    letter-spacing: 2px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+
+  @media (max-width: 600px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .section { padding: 60px 20px; }
+    .candidaturas-section { padding: 60px 20px; }
+    .modal-header { padding: 24px 20px 16px; }
+    .modal-body { padding: 24px 20px; }
+    .candidatura-item { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    TCS <span>COPA ROBLOX</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#candidaturas">Inscrições</a></li>
+    <li><a href="#ver">Ver Candidaturas</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-badge">Temporada 1 · Roblox</div>
+  <h1>COPA<br><em>ROBLOX</em></h1>
+  <p class="hero-sub">[TCS] · Season 1</p>
+  <div class="hero-divider"></div>
+  <p class="hero-desc">Faça sua candidatura como Jogador, Juiz ou Técnico e faça parte da primeira temporada da Copa Roblox TCS.</p>
+  <div class="hero-cta">
+    <a href="#candidaturas" class="btn btn-primary">Me Candidatar</a>
+    <a href="#ver" class="btn btn-outline">Ver Candidaturas</a>
+  </div>
+</section>
+
+<!-- CARDS -->
+<section class="section" id="candidaturas">
+  <p class="section-label">Inscrições Abertas</p>
+  <h2 class="section-title">ESCOLHA SUA FUNÇÃO</h2>
+  <div class="cards">
+    <div class="card" onclick="openModal('jogador')">
+      <span class="card-icon">⚽</span>
+      <h3 class="card-title">Jogador</h3>
+      <p class="card-desc">Mostre seu talento no campo. Informe sua posição, nick do Roblox e Discord para participar.</p>
+      <span class="card-link">Candidatar-se</span>
+    </div>
+    <div class="card" onclick="openModal('juiz')">
+      <span class="card-icon">🟨</span>
+      <h3 class="card-title">Juiz</h3>
+      <p class="card-desc">Apite com autoridade. Precisa conhecer as regras do TCS e estar disponível para os jogos.</p>
+      <span class="card-link">Candidatar-se</span>
+    </div>
+    <div class="card" onclick="openModal('tecnico')">
+      <span class="card-icon">📋</span>
+      <h3 class="card-title">Técnico</h3>
+      <p class="card-desc">Lidere seu time com estratégia. Informe sua experiência anterior e disponibilidade.</p>
+      <span class="card-link">Candidatar-se</span>
+    </div>
+  </div>
+</section>
+
+<!-- VER CANDIDATURAS -->
+<section class="candidaturas-section" id="ver">
+  <div class="candidaturas-inner">
+    <p class="section-label">Painel</p>
+    <h2 class="section-title" style="font-family:'Bebas Neue',sans-serif;font-size:56px;letter-spacing:2px;margin-bottom:32px;">CANDIDATURAS</h2>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('jogadores', this)">Jogadores</button>
+      <button class="tab-btn" onclick="switchTab('juizes', this)">Juízes</button>
+      <button class="tab-btn" onclick="switchTab('tecnicos', this)">Técnicos</button>
+    </div>
+    <div id="tab-jogadores" class="tab-content active">
+      <div class="candidatura-list" id="list-jogadores"></div>
+    </div>
+    <div id="tab-juizes" class="tab-content">
+      <div class="candidatura-list" id="list-juizes"></div>
+    </div>
+    <div id="tab-tecnicos" class="tab-content">
+      <div class="candidatura-list" id="list-tecnicos"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2025 Copa Roblox [TCS] S1 · Todos os direitos reservados
+</footer>
+
+<!-- MODAL JOGADOR -->
+<div class="modal-overlay" id="modal-jogador">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <p style="font-size:11px;letter-spacing:3px;color:var(--gray3);margin-bottom:4px;">INSCRIÇÃO</p>
+        <h2 class="modal-title">⚽ JOGADOR</h2>
+      </div>
+      <button class="modal-close" onclick="closeModal('jogador')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="form-jogador">
+        <div class="form-group">
+          <label class="form-label">Nick do Roblox</label>
+          <input class="form-input" id="j-roblox" type="text" placeholder="Seu usuário no Roblox">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nick do Discord</label>
+          <input class="form-input" id="j-discord" type="text" placeholder="usuario#0000 ou @usuario">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Posição</label>
+          <select class="form-select" id="j-posicao">
+            <option value="">Selecione sua posição</option>
+            <option>Goleiro</option>
+            <option>Zagueiro</option>
+            <option>Lateral Direito</option>
+            <option>Lateral Esquerdo</option>
+            <option>Volante</option>
+            <option>Meia</option>
+            <option>Meia Atacante</option>
+            <option>Ponta Direita</option>
+            <option>Ponta Esquerda</option>
+            <option>Centroavante</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Você vai respeitar as regras?</label>
+          <div class="form-radio-group">
+            <input class="form-radio" type="radio" name="j-regras" id="j-regras-sim" value="Sim">
+            <label class="form-radio-label" for="j-regras-sim">✅ Sim</label>
+            <input class="form-radio" type="radio" name="j-regras" id="j-regras-nao" value="Não">
+            <label class="form-radio-label" for="j-regras-nao">❌ Não</label>
+          </div>
+        </div>
+        <button class="form-submit" onclick="submitForm('jogador')">ENVIAR CANDIDATURA</button>
+      </div>
+      <div class="success-msg" id="success-jogador">
+        <span class="success-icon">✅</span>
+        <h3>CANDIDATURA ENVIADA!</h3>
+        <p>Sua inscrição como Jogador foi registrada com sucesso.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL JUIZ -->
+<div class="modal-overlay" id="modal-juiz">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <p style="font-size:11px;letter-spacing:3px;color:var(--gray3);margin-bottom:4px;">INSCRIÇÃO</p>
+        <h2 class="modal-title">🟨 JUIZ</h2>
+      </div>
+      <button class="modal-close" onclick="closeModal('juiz')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="form-juiz">
+        <div class="form-group">
+          <label class="form-label">Nick do Roblox</label>
+          <input class="form-input" id="ju-roblox" type="text" placeholder="Seu usuário no Roblox">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nick do Discord</label>
+          <input class="form-input" id="ju-discord" type="text" placeholder="usuario#0000 ou @usuario">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Você sabe as regras do TCS?</label>
+          <div class="form-radio-group">
+            <input class="form-radio" type="radio" name="ju-regras" id="ju-regras-sim" value="Sim">
+            <label class="form-radio-label" for="ju-regras-sim">✅ Sim</label>
+            <input class="form-radio" type="radio" name="ju-regras" id="ju-regras-nao" value="Não">
+            <label class="form-radio-label" for="ju-regras-nao">❌ Não</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Vai zaralhar? (trollar / bagunçar)</label>
+          <div class="form-radio-group">
+            <input class="form-radio" type="radio" name="ju-zaralhar" id="ju-zaralhar-sim" value="Sim">
+            <label class="form-radio-label" for="ju-zaralhar-sim">Sim</label>
+            <input class="form-radio" type="radio" name="ju-zaralhar" id="ju-zaralhar-nao" value="Não">
+            <label class="form-radio-label" for="ju-zaralhar-nao">Não</label>
+          </div>
+        </div>
+        <button class="form-submit" onclick="submitForm('juiz')">ENVIAR CANDIDATURA</button>
+      </div>
+      <div class="success-msg" id="success-juiz">
+        <span class="success-icon">✅</span>
+        <h3>CANDIDATURA ENVIADA!</h3>
+        <p>Sua inscrição como Juiz foi registrada com sucesso.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL TECNICO -->
+<div class="modal-overlay" id="modal-tecnico">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <p style="font-size:11px;letter-spacing:3px;color:var(--gray3);margin-bottom:4px;">INSCRIÇÃO</p>
+        <h2 class="modal-title">📋 TÉCNICO</h2>
+      </div>
+      <button class="modal-close" onclick="closeModal('tecnico')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="form-tecnico">
+        <div class="form-group">
+          <label class="form-label">Nick do Roblox</label>
+          <input class="form-input" id="t-roblox" type="text" placeholder="Seu usuário no Roblox">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nick do Discord</label>
+          <input class="form-input" id="t-discord" type="text" placeholder="usuario#0000 ou @usuario">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Vai zaralhar? (trollar / bagunçar)</label>
+          <div class="form-radio-group">
+            <input class="form-radio" type="radio" name="t-zaralhar" id="t-zaralhar-sim" value="Sim">
+            <label class="form-radio-label" for="t-zaralhar-sim">Sim</label>
+            <input class="form-radio" type="radio" name="t-zaralhar" id="t-zaralhar-nao" value="Não">
+            <label class="form-radio-label" for="t-zaralhar-nao">Não</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Já foi técnico alguma vez?</label>
+          <div class="form-radio-group">
+            <input class="form-radio" type="radio" name="t-exp" id="t-exp-sim" value="Sim">
+            <label class="form-radio-label" for="t-exp-sim">✅ Sim</label>
+            <input class="form-radio" type="radio" name="t-exp" id="t-exp-nao" value="Não">
+            <label class="form-radio-label" for="t-exp-nao">❌ Não, primeira vez</label>
+          </div>
+        </div>
+        <button class="form-submit" onclick="submitForm('tecnico')">ENVIAR CANDIDATURA</button>
+      </div>
+      <div class="success-msg" id="success-tecnico">
+        <span class="success-icon">✅</span>
+        <h3>CANDIDATURA ENVIADA!</h3>
+        <p>Sua inscrição como Técnico foi registrada com sucesso.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Storage keys
+  const KEYS = { jogador: 'tcs_jogadores', juiz: 'tcs_juizes', tecnico: 'tcs_tecnicos' };
+
+  function getData(type) {
+    try { return JSON.parse(localStorage.getItem(KEYS[type]) || '[]'); } catch { return []; }
+  }
+
+  function saveData(type, arr) {
+    localStorage.setItem(KEYS[type], JSON.stringify(arr));
+  }
+
+  function openModal(type) {
+    document.getElementById('modal-' + type).classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(type) {
+    document.getElementById('modal-' + type).classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Close on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(el => {
+    el.addEventListener('click', e => {
+      if (e.target === el) {
+        el.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  });
+
+  function getRadio(name) {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? el.value : '';
+  }
+
+  function submitForm(type) {
+    let data = {};
+    let valid = true;
+
+    if (type === 'jogador') {
+      const roblox = document.getElementById('j-roblox').value.trim();
+      const discord = document.getElementById('j-discord').value.trim();
+      const posicao = document.getElementById('j-posicao').value;
+      const regras = getRadio('j-regras');
+      if (!roblox || !discord || !posicao || !regras) { valid = false; }
+      data = { roblox, discord, posicao, regras, data: new Date().toLocaleDateString('pt-BR') };
+    } else if (type === 'juiz') {
+      const roblox = document.getElementById('ju-roblox').value.trim();
+      const discord = document.getElementById('ju-discord').value.trim();
+      const regras = getRadio('ju-regras');
+      const zaralhar = getRadio('ju-zaralhar');
+      if (!roblox || !discord || !regras || !zaralhar) { valid = false; }
+      data = { roblox, discord, regras, zaralhar, data: new Date().toLocaleDateString('pt-BR') };
+    } else if (type === 'tecnico') {
+      const roblox = document.getElementById('t-roblox').value.trim();
+      const discord = document.getElementById('t-discord').value.trim();
+      const zaralhar = getRadio('t-zaralhar');
+      const exp = getRadio('t-exp');
+      if (!roblox || !discord || !zaralhar || !exp) { valid = false; }
+      data = { roblox, discord, zaralhar, exp, data: new Date().toLocaleDateString('pt-BR') };
+    }
+
+    if (!valid) {
+      alert('Preencha todos os campos antes de enviar!');
+      return;
+    }
+
+    const arr = getData(type);
+    arr.push(data);
+    saveData(type, arr);
+
+    document.getElementById('form-' + type).style.display = 'none';
+    document.getElementById('success-' + type).classList.add('show');
+
+    setTimeout(() => {
+      closeModal(type);
+      document.getElementById('form-' + type).style.display = 'block';
+      document.getElementById('success-' + type).classList.remove('show');
+      // reset
+      if (type === 'jogador') {
+        document.getElementById('j-roblox').value = '';
+        document.getElementById('j-discord').value = '';
+        document.getElementById('j-posicao').value = '';
+        document.querySelectorAll('input[name="j-regras"]').forEach(r => r.checked = false);
+      } else if (type === 'juiz') {
+        document.getElementById('ju-roblox').value = '';
+        document.getElementById('ju-discord').value = '';
+        document.querySelectorAll('input[name="ju-regras"],input[name="ju-zaralhar"]').forEach(r => r.checked = false);
+      } else if (type === 'tecnico') {
+        document.getElementById('t-roblox').value = '';
+        document.getElementById('t-discord').value = '';
+        document.querySelectorAll('input[name="t-zaralhar"],input[name="t-exp"]').forEach(r => r.checked = false);
+      }
+      renderAll();
+    }, 2000);
+  }
+
+  function renderList(type) {
+    const listId = { jogador: 'list-jogadores', juiz: 'list-juizes', tecnico: 'list-tecnicos' }[type];
+    const container = document.getElementById(listId);
+    const arr = getData(type);
+
+    if (arr.length === 0) {
+      container.innerHTML = `<div class="empty-state"><span class="empty-icon">📭</span><p>Nenhuma candidatura ainda.</p></div>`;
+      return;
+    }
+
+    container.innerHTML = arr.map((d, i) => {
+      if (type === 'jogador') {
+        return `<div class="candidatura-item">
+          <div class="field"><div class="field-label">Roblox</div>${d.roblox}</div>
+          <div class="field"><div class="field-label">Discord</div>${d.discord}</div>
+          <div class="field"><div class="field-label">Posição</div>${d.posicao}</div>
+          <div class="field"><div class="field-label">Vai respeitar regras?</div>${d.regras}</div>
+          <div class="field"><div class="field-label">Data</div><span class="status-badge">${d.data}</span></div>
+        </div>`;
+      } else if (type === 'juiz') {
+        return `<div class="candidatura-item">
+          <div class="field"><div class="field-label">Roblox</div>${d.roblox}</div>
+          <div class="field"><div class="field-label">Discord</div>${d.discord}</div>
+          <div class="field"><div class="field-label">Sabe as regras?</div>${d.regras}</div>
+          <div class="field"><div class="field-label">Vai zaralhar?</div>${d.zaralhar}</div>
+          <div class="field"><div class="field-label">Data</div><span class="status-badge">${d.data}</span></div>
+        </div>`;
+      } else {
+        return `<div class="candidatura-item">
+          <div class="field"><div class="field-label">Roblox</div>${d.roblox}</div>
+          <div class="field"><div class="field-label">Discord</div>${d.discord}</div>
+          <div class="field"><div class="field-label">Vai zaralhar?</div>${d.zaralhar}</div>
+          <div class="field"><div class="field-label">Já foi técnico?</div>${d.exp}</div>
+          <div class="field"><div class="field-label">Data</div><span class="status-badge">${d.data}</span></div>
+        </div>`;
+      }
+    }).join('');
+  }
+
+  function renderAll() {
+    renderList('jogador');
+    renderList('juiz');
+    renderList('tecnico');
+  }
+
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+  }
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  renderAll();
+</script>
+</body>
+</html>
